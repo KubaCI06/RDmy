@@ -1,0 +1,49 @@
+local oreName = "Eye Ore"
+
+local ScreenGui = Instance.new("ScreenGui")
+local TextButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "OreDupeGui"
+
+TextButton.Parent = ScreenGui
+TextButton.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+TextButton.Position = UDim2.new(0.5, -100, 0.5, -25)
+TextButton.Size = UDim2.new(0, 200, 0, 50)
+TextButton.Font = Enum.Font.SourceSansBold
+TextButton.Text = "Dupe " .. oreName
+TextButton.TextColor3 = Color3.new(1, 1, 1)
+TextButton.TextScaled = true
+
+local function dupeOre()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local backpack = player:WaitForChild("Backpack")
+
+    -- Find the ore tool in backpack or character
+    local oreTool = nil
+    for _, item in pairs(backpack:GetChildren()) do
+        if item.Name == oreName then
+            oreTool = item
+            break
+        end
+    end
+    if not oreTool then
+        for _, item in pairs(character:GetChildren()) do
+            if item.Name == oreName then
+                oreTool = item
+                break
+            end
+        end
+    end
+
+    if oreTool then
+        -- Clone the ore tool and put it in backpack
+        local clone = oreTool:Clone()
+        clone.Parent = backpack
+    else
+        warn("Ore '" .. oreName .. "' not found in backpack or character.")
+    end
+end
+
+TextButton.MouseButton1Click:Connect(dupeOre)
